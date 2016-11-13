@@ -13,7 +13,7 @@ void help();
 
 
 int main(int argc, const char *argv[])
-{	
+{
 	int size = getsize(argc, argv);
 	if(size < 1 || hasflag('h', argc, argv))
 		help();
@@ -29,7 +29,7 @@ int main(int argc, const char *argv[])
 
 void help()
 {
-	printf("%s\n%s\n%s\n%s\n%s\n", 
+	printf("%s\n%s\n%s\n%s\n%s\n",
 			"Primecalc : 	calculates prime numbers upto the value specified.\n",
 			"Usage     :	primecalc [-h] [-c] max_value\n",
 			"Options   : 	",
