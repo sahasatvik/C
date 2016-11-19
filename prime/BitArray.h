@@ -2,10 +2,8 @@
 #ifndef _BITARR_H
 #define _BITARR_H
 
-
 /* Defines a simulated array of bits */
-typedef struct
-{
+typedef struct {
 	unsigned long long int length;
 	unsigned char *chunk;
 } BitArray;

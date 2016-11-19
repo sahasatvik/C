@@ -14,7 +14,7 @@ BitArray *initbarr(unsigned long long int length)
 void setallchunks(int bit, BitArray *barr)
 {
 	unsigned long long int i = 0;
-	while(i < barr->length)
+	while (i < barr->length)
 		setbitat(bit, i++, barr);
 }
 
@@ -25,7 +25,7 @@ int getbitat(unsigned long long int p, BitArray *barr)
 
 void setbitat(int bit, unsigned long long int p, BitArray *barr)
 {
-	if(bit)
+	if (bit)
 		barr->chunk[p/8] |= ((1 << (p % 8)) & 0xFF);
 	else
 		barr->chunk[p/8] &= ~((1 << (p % 8)) & 0xFF);
@@ -34,9 +34,8 @@ void setbitat(int bit, unsigned long long int p, BitArray *barr)
 unsigned long long int countbit(int bit, BitArray *barr)
 {
 	unsigned long long int i = 0, c = 0;
-	while(i < barr->length)
+	while (i < barr->length)
 		c += (getbitat(i++, barr) == bit);
 	return c;
 
 }
-

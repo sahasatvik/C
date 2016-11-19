@@ -2,7 +2,6 @@
 #ifndef _SIEVE_H
 #define _SIEVE_H
 
-
 /* Sieves a BitArray for primes, setting bits whose indices are composite numbes to 1 */
 void sievebarr(BitArray *);
 

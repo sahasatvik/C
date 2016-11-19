@@ -6,20 +6,19 @@
 
 typedef unsigned long long int Long;
 
-
 Long getsize(int, const char **);
 int  hasflag(char, int, const char **);
 void help();
 
-
+/* Generates a list of prime numbers, storage efficient version */
 int main(int argc, const char *argv[])
 {
 	int size = getsize(argc, argv);
-	if(size < 1 || hasflag('h', argc, argv))
+	if (size < 1 || hasflag('h', argc, argv))
 		help();
 	BitArray *numbers = initbarr(1 + size);
 	sievebarr(numbers);
-	if(hasflag('c', argc, argv))
+	if (hasflag('c', argc, argv))
 		printf("%llu", countprimes(numbers));
 	else
 		dispprimes(numbers);
@@ -42,11 +41,9 @@ Long getsize(int argc, const char *argv[])
 {
 	Long size = 0;
 	const char *arg;
-	while(--argc > 0)
-	{
-		if(isdigit(*(arg = *++argv)))
-		{
-			while(isdigit(*arg))
+	while (--argc > 0) {
+		if (isdigit(*(arg = *++argv))) {
+			while (isdigit(*arg))
 				size = (10 * size) + (*arg++ - '0');
 			return size;
 		}
@@ -57,8 +54,8 @@ Long getsize(int argc, const char *argv[])
 int hasflag(char c, int argc, const char *argv[])
 {
 	const char *arg = "";
-	while(--argc > 0)
-		if((*(arg = *++argv) == '-') && (*++arg == c))
+	while (--argc > 0)
+		if ((*(arg = *++argv) == '-') && (*++arg == c))
 			return 1;
 	return 0;
 }
