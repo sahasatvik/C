@@ -1,6 +1,6 @@
 CC=cc
 CFLAGS=-Wall
-MAIN=main.c
+MAIN=primecalc.c
 TARGET=primecalc
 OBJS=BitArray.o \
      Sieve.o
