@@ -14,9 +14,8 @@ void printbin(Long dec);
 int main(int argc, char const *argv[]) {
         int i;
         int size = getnum(numbers, argc, argv);
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < size; i++)
                 printbin(numbers[i]);
-        }
         return 0;
 }
 
