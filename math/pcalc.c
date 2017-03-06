@@ -20,7 +20,8 @@ int     getch();
 void    ungetch(int);
 
 /* Reverse Polish Notation parser */
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[])
+{
 	int type;
 	double op2;
 	char s[MAXOP];

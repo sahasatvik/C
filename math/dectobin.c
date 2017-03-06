@@ -11,7 +11,8 @@ int  getnum(Long *, int, const char **);
 void printbin(Long dec);
 
 /* Converts the numbers in the command line into binary */
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[])
+{
 	int i;
 	int size = getnum(numbers, argc, argv);
 	for (i = 0; i < size; i++)
