@@ -9,9 +9,11 @@ void sievebarr(BitArray *numbers)
 	setbitat(1, 0, numbers);
 	setbitat(1, 1, numbers);
 	while ((n * n) < numbers->length) {
-		m = n;
-		while ((m = m + n) < numbers->length)
+		m = (n * n);
+		while (m < numbers->length) {
 			setbitat(1, m, numbers);
+			m += n;
+		}
 		while (getbitat(++n, numbers));
 	}
 }

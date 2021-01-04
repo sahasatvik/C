@@ -16,7 +16,7 @@ BitArray *initbarr(unsigned long long int);
 void setallchunks(int, BitArray *);
 
 /* Returns the bit at the specified posiotion */
-int  getbitat(unsigned long long int, BitArray *);
+int getbitat(unsigned long long int, BitArray *);
 
 /* Sets a bit at the specified position */
 void setbitat(int, unsigned long long int, BitArray *);
