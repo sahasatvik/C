@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 typedef unsigned long long int Long;
 
