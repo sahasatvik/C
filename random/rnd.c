@@ -7,11 +7,13 @@ int  getnum(int *, int, const char **);
 /* Generates a list of random numbers */
 int main(int argc, const char *argv[])
 {
-	int i, number, max;
+	int i, number = 10, max = 100;
 	int args[100];
-	getnum(args, argc, argv);
-	number = (args[0])? args[0] : 10;
-	max    = (args[1])? args[1] : 100;
+	int size = getnum(args, argc, argv);
+        if (size > 0)
+                number = args[0];
+        if (size > 1)
+                max = args[1];
 	for (i = 0; i < number; i++)
 		printf("%d ", rand() % max);
 	return 0;
