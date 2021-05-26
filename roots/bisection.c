@@ -8,7 +8,11 @@ double f(double);
 double bisection(double (*f)(double), double lo, double hi, double delta) {
         double x;
         double fx, flo = f(lo), fhi = f(hi);
-        if (flo * fhi > 0) {
+        if (flo == 0.0) {
+                return lo;
+        } else if (fhi == 0.0) {
+                return hi;
+        } else if (flo * fhi > 0) {
                 return lo - 1;
         }
         for (int i = 0; (hi - lo) > delta; i++) {
