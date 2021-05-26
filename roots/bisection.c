@@ -6,19 +6,23 @@ double f(double);
 
 /* Finding roots in a given interval using the method of successive bisection */
 double bisection(double (*f)(double), double lo, double hi, double delta) {
-        if (f(lo) * f(hi) > 0) {
+        double x;
+        double fx, flo = f(lo), fhi = f(hi);
+        if (flo * fhi > 0) {
                 return lo - 1;
         }
-        double x;
-        double fx;
         for (int i = 0; (hi - lo) > delta; i++) {
                 x = (lo + hi) / 2;
                 fx = f(x);
                 printf("Step %3d : x = %.8f, f(x) = %+.8f\n", i, x, fx);
-                if (f(lo) * fx <= 0) {
+                if (fx == 0.0) {
+                        break;
+                } else if (flo * fx < 0) {
                         hi = x;
+                        fhi = fx;
                 } else {
                         lo = x;
+                        flo = fx;
                 }
         }
         return x;
