@@ -9,21 +9,23 @@ double f(double);
 
 /* Finding roots in a given interval using the method of false position */
 double regulafalsi(double (*f)(double), double lo, double hi, double epsilon) {
-        if (f(lo) * f(hi) > 0) {
+        double x;
+        double fx, flo = f(lo), fhi = f(hi);
+        if (flo * fhi > 0) {
                 return lo - 1;
         }
-        double x;
-        double fx;
         for (int i = 0; i < MAXITER; i++) {
-                x = hi - f(hi) * (hi - lo) / (f(hi) - f(lo));
+                x = hi - fhi * (hi - lo) / (fhi - flo);
                 fx = f(x);
                 printf("Step %3d : x = %.8f, f(x) = %+.8f\n", i, x, fx);
                 if (fabs(fx) < epsilon) {
                         return x;
-                } else if (f(lo) * f(x) < 0) {
+                } else if (flo * fx < 0) {
                         hi = x;
+                        fhi = fx;
                 } else {
                         lo = x;
+                        flo = fx;
                 }
         }
         return x;

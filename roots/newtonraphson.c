@@ -17,7 +17,7 @@ double newtonraphson(double (*f)(double), double (*df)(double), double x, double
                 if (fabs(fx) < epsilon) {
                         return x;
                 }
-                x -= f(x) / df(x);
+                x -= fx / df(x);
         }
         return x;
 }
