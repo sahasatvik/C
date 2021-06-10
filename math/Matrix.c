@@ -37,7 +37,7 @@ Matrix *matrix_transpose(Matrix *m) {
 
 Matrix *matrix_mul(Matrix *a, Matrix *b) {
         if (a->columns != b->rows)
-                return matrix_zeros(0, 0);
+                return NULL;
         Matrix *c = matrix_zeros(a->rows, b->columns);
         for (unsigned int i = 0; i < c->rows; i++) {
                 for (unsigned int j = 0; j < c->columns; j++) {
@@ -60,11 +60,11 @@ Matrix *matrix_copy(Matrix *m) {
 
 Matrix *matrix_submatrix(Matrix *m, unsigned int i0, unsigned int j0, unsigned int i1, unsigned int j1) {
         if (i0 < 0 || j0 < 0 || i0 >= m->rows || j0 >= m->columns)
-                return matrix_zeros(0, 0);
+                return NULL;
         if (i1 < 1 || j1 < 1 || i1 >= m->rows || j1 >= m->columns)
-                return matrix_zeros(0, 0);
+                return NULL;
         if (i1 <= i0 || j1 <= j0)
-                return matrix_zeros(0, 0);
+                return NULL;
         Matrix *mc = matrix_zeros(i1 - i0, j1 - j0);
         for (unsigned int i = i0; i < i1; i++)
                 for (unsigned int j = j0; j < j1; j++)
