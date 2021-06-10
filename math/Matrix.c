@@ -20,6 +20,13 @@ Matrix *matrix_formula(unsigned int rows, unsigned int columns, double (*f)(unsi
         return m;
 }
 
+void matrix_free(Matrix *m) {
+        for (unsigned int i = 0; i < m->rows; i++)
+                free(m->data[i]);
+        free(m->data);
+        free(m);
+}
+
 Matrix *matrix_transpose(Matrix *m) {
         Matrix *mt = matrix_zeros(m->columns, m->rows);
         for (unsigned int i = 0; i < mt->rows; i++)

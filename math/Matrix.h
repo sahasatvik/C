@@ -13,6 +13,9 @@ Matrix *matrix_zeros(unsigned int, unsigned int);
 /* Create a matrix of given size with the (i, j)th entry filled as f(i, j) */
 Matrix *matrix_formula(unsigned int, unsigned int, double (*)(unsigned int, unsigned int));
 
+/* Free the memory used by a matrix */
+void matrix_free(Matrix *);
+
 /* Get a copy of a matrix */
 Matrix *matrix_copy(Matrix *);
 /* Get a submatrix of a matrix */

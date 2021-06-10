@@ -39,8 +39,8 @@ int main(int argc, const char *argv[]) {
         printf("\nMatrix A after subtracting four times row 1 from row 0 in place:\n");
         matrix_show(a, "%5.1f ");
 
-        free(a);
-        free(b);
+        matrix_free(a);
+        matrix_free(b);
         
         return 0;
 }
