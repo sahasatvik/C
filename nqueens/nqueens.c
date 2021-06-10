@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <ctype.h>
 
 void solve(int, int[], int);
 int  is_valid(int[], int);
