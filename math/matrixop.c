@@ -24,6 +24,21 @@ int main(int argc, const char *argv[]) {
         printf("\nMatrix AB :\n");
         matrix_show(matrix_mul(a, b), "%5.1f ");
 
+        printf("\nMatrix B, submatrix from (0, 1) to (2, 3):\n");
+        matrix_show(matrix_submatrix(b, 0, 1, 2, 3), "%5.1f ");
+
+        matrix_row_swap(a, 0, 1);
+        printf("\nMatrix A after swapping rows 0, 1 in place:\n");
+        matrix_show(a, "%5.1f ");
+        
+        matrix_row_scale(a, 0, 2);
+        printf("\nMatrix A after doubling row 0 in place:\n");
+        matrix_show(a, "%5.1f ");
+        
+        matrix_row_add_scaled(a, 0, 1, -4);
+        printf("\nMatrix A after subtracting four times row 1 from row 0 in place:\n");
+        matrix_show(a, "%5.1f ");
+
         free(a);
         free(b);
         
