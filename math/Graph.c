@@ -8,6 +8,7 @@ Graph *graph_create(unsigned int n_nodes, unsigned int n_edges, int edges[][2]) 
         g->adjacency = calloc(n_nodes, sizeof(unsigned char *));
         for (unsigned int i = 0; i < n_nodes; i++)
                 g->adjacency[i] = calloc(n_nodes, sizeof(unsigned char));
+        /* For every pair of nodes constituting an edge, mark them adjacent to one another */
         for (unsigned int i = 0; i < n_edges; i++) {
                 g->adjacency[edges[i][0]][edges[i][1]] = 1;
                 g->adjacency[edges[i][1]][edges[i][0]] = 1;
@@ -35,14 +36,21 @@ Graph *graph_copy(Graph *g) {
 }
 
 int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, unsigned char *visited) {
+        /* Mark the current element as visited */
         visited[current] = 1;
         for (unsigned int i = 0; i < g->n_nodes; i++) {
+                /* Ignore the current node and the previous node */
                 if (i == current || i == previous)
                         continue;
+                /* Ignore nodes not adjacent to the current one */
                 if (!g->adjacency[current][i])
                         continue;
+                /* If the new node is visited, but not the one visited just prior,
+                   we have found a cycle */
                 if (visited[i])
                         return 1;
+                /* We have an unvisited node not completing a cycle. Recursively check
+                   whether it completes a cycle. */
                 if (graph_cycle_elem(g, i, current, visited))
                         return 1;
         }
@@ -52,6 +60,7 @@ int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, unsi
 int graph_cycle(Graph *g) {
         unsigned char *visited = calloc(g->n_nodes, sizeof(unsigned char));
         for (unsigned int i = 0; i < g->n_nodes; i++)
+                /* Ignore already visited nodes */
                 if (!visited[i] && graph_cycle_elem(g, i, -1, visited)) {
                         free(visited);
                         return 1;
