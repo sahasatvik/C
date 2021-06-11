@@ -15,7 +15,12 @@ void graph_free(Graph *);
 /* Get a copy of a graph */
 Graph *graph_copy(Graph *);
 
+/* Returns whether a given element is part of or connected to a cycle */
+int graph_cycle_elem(Graph *g, unsigned int, unsigned int, unsigned char *);
+/* Returns whether the given graph contains a cycle of elements */
+int graph_cycle(Graph *g);
+
 /* Display the graph nodes and their adjacencies */
-void graph_show(Graph *, char *, char *);
+void graph_show_adj(Graph *, char *, char *);
 
 #endif

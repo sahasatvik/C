@@ -34,7 +34,33 @@ Graph *graph_copy(Graph *g) {
         return gc;
 }
 
-void graph_show(Graph *g, char *format_node, char *format_others) {
+int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, unsigned char *visited) {
+        visited[current] = 1;
+        for (unsigned int i = 0; i < g->n_nodes; i++) {
+                if (i == current || i == previous)
+                        continue;
+                if (!g->adjacency[current][i])
+                        continue;
+                if (visited[i])
+                        return 1;
+                if (graph_cycle_elem(g, i, current, visited))
+                        return 1;
+        }
+        return 0;
+}
+
+int graph_cycle(Graph *g) {
+        unsigned char *visited = calloc(g->n_nodes, sizeof(unsigned char));
+        for (unsigned int i = 0; i < g->n_nodes; i++)
+                if (!visited[i] && graph_cycle_elem(g, i, -1, visited)) {
+                        free(visited);
+                        return 1;
+                }
+        free(visited);
+        return 0;
+}
+
+void graph_show_adj(Graph *g, char *format_node, char *format_others) {
         if (g == NULL) {
                 printf("NULL\n");
                 return;
