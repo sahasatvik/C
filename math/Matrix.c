@@ -35,6 +35,26 @@ Matrix *matrix_transpose(Matrix *m) {
         return mt;
 }
 
+Matrix *matrix_scale(Matrix *m, double c) {
+        Matrix *ms = matrix_zeros(m->rows, m->columns);
+        for (unsigned int i = 0; i < ms->rows; i++)
+                for (unsigned int j = 0; j < ms->columns; j++)
+                        ms->data[i][j] = c * m->data[i][j];
+        return ms;
+}
+
+Matrix *matrix_sum(Matrix *a, Matrix *b) {
+        if (a->rows != b->rows || a->columns != b->columns)
+                return NULL;
+        Matrix *c = matrix_zeros(a->rows, a->columns);
+        for (unsigned int i = 0; i < c->rows; i++) {
+                for (unsigned int j = 0; j < c->columns; j++) {
+                        c->data[i][j] = a->data[i][j] + b->data[i][j];
+                }
+        }
+        return c;
+}
+
 Matrix *matrix_mul(Matrix *a, Matrix *b) {
         if (a->columns != b->rows)
                 return NULL;

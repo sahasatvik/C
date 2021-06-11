@@ -22,6 +22,10 @@ Matrix *matrix_copy(Matrix *);
 Matrix *matrix_submatrix(Matrix *, unsigned int, unsigned int, unsigned int, unsigned int);
 /* Get the transpose of a matrix */
 Matrix *matrix_transpose(Matrix *);
+/* Get a scaled copy of a matrix */
+Matrix *matrix_scale(Matrix *, double);
+/* Get the sum of two matrices */
+Matrix *matrix_sum(Matrix *, Matrix *);
 /* Get the product of two matrices */
 Matrix *matrix_mul(Matrix *, Matrix *);
 
