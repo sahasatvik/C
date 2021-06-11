@@ -170,8 +170,10 @@ double matrix_det(Matrix *m) {
                 /* Skip ahead until the m[k, i] entry is non-zero */
                 for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
                 /* All m[k, i] are zero, which means that the matrix is singular */
-                if (k >= mc->rows)
+                if (k >= mc->rows) {
+                        matrix_free(mc);
                         return 0.0;
+                }
                 /* Swap the non-zero row into place */
                 matrix_row_swap(mc, i, k);
                 /* Scale the determinant up, and scale the leading element m[i, i] in the row down to one.
