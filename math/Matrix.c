@@ -4,12 +4,12 @@
 #include "Matrix.h"
 
 Matrix *matrix_zeros(unsigned int rows, unsigned int columns) {
-        Matrix *m = (Matrix *) malloc(sizeof(Matrix));
+        Matrix *m = malloc(sizeof(Matrix));
         m->rows = rows;
         m->columns = columns;
-        m->data = (double **) malloc(sizeof(double *) * rows);
+        m->data = calloc(rows, sizeof(double *));
         for (unsigned int i = 0; i < rows; i++)
-                m->data[i] = (double *) malloc(sizeof(double) * columns);
+                m->data[i] = calloc(columns, sizeof(double));
         return m;
 }
 
@@ -24,12 +24,7 @@ Matrix *matrix_formula(unsigned int rows, unsigned int columns, double (*f)(unsi
 Matrix *matrix_identity(unsigned int n) {
         Matrix *m = matrix_zeros(n, n);
         for (unsigned int i = 0; i < m->rows; i++)
-                for (unsigned int j = 0; j < m->columns; j++)
-                        if (i == j) {
-                                m->data[i][j] = 1;
-                        } else {
-                                m->data[i][j] = 0;
-                        }
+                m->data[i][i] = 1;
         return m;
 }
 
