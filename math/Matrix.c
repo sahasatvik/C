@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "Matrix.h"
 
 Matrix *matrix_zeros(unsigned int rows, unsigned int columns) {
@@ -17,6 +18,18 @@ Matrix *matrix_formula(unsigned int rows, unsigned int columns, double (*f)(unsi
         for (unsigned int i = 0; i < rows; i++)
                 for (unsigned int j = 0; j < columns; j++)
                         m->data[i][j] = f(i, j);
+        return m;
+}
+
+Matrix *matrix_identity(unsigned int n) {
+        Matrix *m = matrix_zeros(n, n);
+        for (unsigned int i = 0; i < m->rows; i++)
+                for (unsigned int j = 0; j < m->columns; j++)
+                        if (i == j) {
+                                m->data[i][j] = 1;
+                        } else {
+                                m->data[i][j] = 0;
+                        }
         return m;
 }
 
@@ -122,6 +135,25 @@ void matrix_map(Matrix *m, double (*f)(double, unsigned int, unsigned int)) {
         for (unsigned int i = 0; i < m->rows; i++)
                 for (unsigned int j = 0; j < m->columns; j++)
                         m->data[i][j] = f(m->data[i][j], i, j);
+}
+
+double matrix_det(Matrix *m) {
+        if (m->rows != m->columns)
+                return 0.0;
+        Matrix *mc = matrix_copy(m);
+        double det = 1.0;
+        for (unsigned int i = 0; i < mc->rows; i++) {
+                unsigned int k = i;
+                for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
+                if (k >= mc->rows)
+                        return 0.0;
+                matrix_row_swap(mc, i, k);
+                det *= mc->data[i][i] * ((i == k)? 1.0 : -1.0);
+                matrix_row_scale(mc, i, 1.0 / mc->data[i][i]);
+                for (k = i + 1; k < mc->rows; k++)
+                        matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
+        }
+        return det;
 }
 
 void matrix_show(Matrix *m, char *format) {
