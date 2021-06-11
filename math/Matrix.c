@@ -29,6 +29,8 @@ Matrix *matrix_identity(unsigned int n) {
 }
 
 void matrix_free(Matrix *m) {
+        if (m == NULL)
+                return;
         for (unsigned int i = 0; i < m->rows; i++)
                 free(m->data[i]);
         free(m->data);
@@ -36,6 +38,8 @@ void matrix_free(Matrix *m) {
 }
 
 Matrix *matrix_transpose(Matrix *m) {
+        if (m == NULL)
+                return NULL;
         Matrix *mt = matrix_zeros(m->columns, m->rows);
         for (unsigned int i = 0; i < mt->rows; i++)
                 for (unsigned int j = 0; j < mt->columns; j++)
@@ -44,6 +48,8 @@ Matrix *matrix_transpose(Matrix *m) {
 }
 
 Matrix *matrix_mul(Matrix *a, Matrix *b) {
+        if (a == NULL || b == NULL)
+                return NULL;
         if (a->columns != b->rows)
                 return NULL;
         Matrix *c = matrix_zeros(a->rows, b->columns);
@@ -60,6 +66,8 @@ Matrix *matrix_mul(Matrix *a, Matrix *b) {
 }
 
 Matrix *matrix_copy(Matrix *m) {
+        if (m == NULL)
+                return NULL;
         Matrix *mc = matrix_zeros(m->rows, m->columns);
         for (unsigned int i = 0; i < mc->rows; i++)
                 for (unsigned int j = 0; j < mc->columns; j++)
@@ -68,6 +76,8 @@ Matrix *matrix_copy(Matrix *m) {
 }
 
 Matrix *matrix_submatrix(Matrix *m, unsigned int i0, unsigned int j0, unsigned int i1, unsigned int j1) {
+        if (m == NULL)
+                return NULL;
         if (i0 < 0 || j0 < 0 || i0 >= m->rows || j0 >= m->columns)
                 return NULL;
         if (i1 < 1 || j1 < 1 || i1 >= m->rows || j1 >= m->columns)
@@ -82,6 +92,8 @@ Matrix *matrix_submatrix(Matrix *m, unsigned int i0, unsigned int j0, unsigned i
 }
 
 void matrix_sum(Matrix *a, Matrix *b) {
+        if (a == NULL || b == NULL)
+                return;
         if (a->rows != b->rows || a->columns != b->columns)
                 return;
         for (unsigned int i = 0; i < a->rows; i++) {
@@ -92,6 +104,8 @@ void matrix_sum(Matrix *a, Matrix *b) {
 }
 
 double matrix_sum_elem(Matrix *m) {
+        if (m == NULL)
+                return 0.0;
         double sum = 0.0;
         for (unsigned int i = 0; i < m->rows; i++)
                 for (unsigned int j = 0; j < m->columns; j++)
@@ -100,6 +114,8 @@ double matrix_sum_elem(Matrix *m) {
 }
 
 void matrix_row_swap(Matrix *m, unsigned int x, unsigned int y) {
+        if (m == NULL)
+                return;
         if (x < 0 || y < 0 || x >= m->rows || y >= m->rows)
                 return;
         double *temp = m->data[x];
@@ -108,6 +124,8 @@ void matrix_row_swap(Matrix *m, unsigned int x, unsigned int y) {
 }
 
 void matrix_row_scale(Matrix *m, unsigned int x, double c) {
+        if (m == NULL)
+                return;
         if (x < 0 || x >= m->rows)
                 return;
         for (unsigned int j = 0; j < m->columns; j++)
@@ -115,6 +133,8 @@ void matrix_row_scale(Matrix *m, unsigned int x, double c) {
 }
 
 void matrix_row_add_scaled(Matrix *m, unsigned int x, unsigned int y, double c) {
+        if (m == NULL)
+                return;
         if (x < 0 || y < 0 || x >= m->rows || y >= m->rows)
                 return;
         for (unsigned int j = 0; j < m->columns; j++)
@@ -122,18 +142,24 @@ void matrix_row_add_scaled(Matrix *m, unsigned int x, unsigned int y, double c) 
 }
 
 void matrix_scale(Matrix *m, double c) {
+        if (m == NULL)
+                return;
         for (unsigned int i = 0; i < m->rows; i++)
                 for (unsigned int j = 0; j < m->columns; j++)
                         m->data[i][j] *= c;
 }
 
 void matrix_map(Matrix *m, double (*f)(double, unsigned int, unsigned int)) {
+        if (m == NULL)
+                return;
         for (unsigned int i = 0; i < m->rows; i++)
                 for (unsigned int j = 0; j < m->columns; j++)
                         m->data[i][j] = f(m->data[i][j], i, j);
 }
 
 double matrix_det(Matrix *m) {
+        if (m == NULL)
+                return 0.0;
         /* Ensure that the matrix is square */
         if (m->rows != m->columns)
                 return 0.0;
@@ -156,39 +182,61 @@ double matrix_det(Matrix *m) {
                 for (k = i + 1; k < mc->rows; k++)
                         matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
         }
+        matrix_free(mc);
         return det;
 }
 
-Matrix *matrix_inv(Matrix *m) {
-        /* Ensure that the matrix is square */
-        if (m->rows != m->columns)
-                return NULL;
-        /* Perform elimination on a copy of m as well as on an identity matrix */
-        Matrix *mc = matrix_copy(m);
-        Matrix *inv = matrix_identity(m->rows);
-        for (unsigned int i = 0; i < mc->rows; i++) {
+int matrix_elim_aug(Matrix *m, Matrix *aug) {
+        if (m == NULL || aug == NULL)
+                return 0;
+        /* Ensure that the matrix is square, and that the matrix to be augmented has the same number of rows */
+        if (m->rows != m->columns || m->rows != aug->rows)
+                return 0;
+        /* Perform elimination on m, and perform the same operations on aug */
+        for (unsigned int i = 0; i < m->rows; i++) {
                 unsigned int k = i;
-                for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
-                if (k >= mc->rows)
-                        return NULL;
-                matrix_row_swap(inv, i, k);
-                matrix_row_swap(mc, i, k);
-                matrix_row_scale(inv, i, 1.0 / mc->data[i][i]);
-                matrix_row_scale(mc, i, 1.0 / mc->data[i][i]);
-                for (k = i + 1; k < mc->rows; k++) {
-                        matrix_row_add_scaled(inv, k, i, -mc->data[k][i]);
-                        matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
+                for (; k < m->rows && fabs(m->data[k][i]) < MATRIX_EPSILON; k++);
+                if (k >= m->rows)
+                        return 0;
+                matrix_row_swap(aug, i, k);
+                matrix_row_swap(m, i, k);
+                matrix_row_scale(aug, i, 1.0 / m->data[i][i]);
+                matrix_row_scale(m, i, 1.0 / m->data[i][i]);
+                for (k = i + 1; k < m->rows; k++) {
+                        matrix_row_add_scaled(aug, k, i, -m->data[k][i]);
+                        matrix_row_add_scaled(m, k, i, -m->data[k][i]);
                 }
         }
         /* The original matrix is now upper triangular, with 1's on the diagonal.
            Perform back-substitution to transform it into an identity matrix */
-        for (unsigned int i = m->rows - 1; i > 0; i--)
-                for (unsigned int k = 0; k < i; k++)
-                        matrix_row_add_scaled(inv, k, i, -mc->data[k][i]);
-        return inv;
+        for (unsigned int i = m->rows - 1; i > 0; i--) {
+                for (unsigned int k = 0; k < i; k++) {
+                        matrix_row_add_scaled(aug, k, i, -m->data[k][i]);
+                        matrix_row_add_scaled(m, k, i, -m->data[k][i]);
+                }
+        }
+        return 1;
+}
+
+Matrix *matrix_inv(Matrix *m) {
+        if (m == NULL)
+                return NULL;
+        /* Finding the inverse is the same as performing elimination on m augmented
+           with an identity matrix */
+        Matrix *mc = matrix_copy(m);
+        Matrix *idt = matrix_identity(m->rows);
+        int singular = !matrix_elim_aug(mc, idt);
+        matrix_free(mc);
+        if (singular)
+                return NULL;
+        return idt;
 }
 
 void matrix_show(Matrix *m, char *format) {
+        if (m == NULL) {
+                printf("NULL\n");
+                return;
+        }
         for (unsigned int i = 0; i < m->rows; i++) {
                 for (unsigned int j = 0; j < m->columns; j++) {
                         printf(format, m->data[i][j]);

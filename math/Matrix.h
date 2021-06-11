@@ -48,6 +48,10 @@ void matrix_map(Matrix *, double (*)(double, unsigned int, unsigned int));
 
 /* Get the determinant of a square matrix */
 double matrix_det(Matrix *);
+/* Perform Gauss Jordan elimination in place on a square matrix, augmented with a secondary matrix
+   with the same number of rows. Return 0 if the first matrix is singular, or not square, or the two
+   matrices have a different number of rows. */
+int matrix_elim_aug(Matrix *, Matrix *);
 /* Get the inverse of a square matrix */
 Matrix *matrix_inv(Matrix *);
 
