@@ -54,6 +54,7 @@ Matrix *matrix_mul(Matrix *a, Matrix *b) {
         Matrix *c = matrix_zeros(a->rows, b->columns);
         for (unsigned int i = 0; i < c->rows; i++) {
                 for (unsigned int j = 0; j < c->columns; j++) {
+                        /* The entry c[i, j] is the dot product of the ith row of a, and the jth column of b. */
                         c->data[i][j] = 0;
                         for (unsigned int k = 0; k < a->columns; k++) {
                                 c->data[i][j] += a->data[i][k] * b->data[k][j];
@@ -138,22 +139,58 @@ void matrix_map(Matrix *m, double (*f)(double, unsigned int, unsigned int)) {
 }
 
 double matrix_det(Matrix *m) {
+        /* Ensure that the matrix is square */
         if (m->rows != m->columns)
                 return 0.0;
         Matrix *mc = matrix_copy(m);
         double det = 1.0;
         for (unsigned int i = 0; i < mc->rows; i++) {
                 unsigned int k = i;
+                /* Skip ahead until the m[k, i] entry is non-zero */
                 for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
+                /* All m[k, i] are zero, which means that the matrix is singular */
                 if (k >= mc->rows)
                         return 0.0;
+                /* Swap the non-zero row into place */
                 matrix_row_swap(mc, i, k);
+                /* Scale the determinant up, and scale the leading element m[i, i] in the row down to one.
+                   If there was a swap, the determinant also changes sign */
                 det *= mc->data[i][i] * ((i == k)? 1.0 : -1.0);
                 matrix_row_scale(mc, i, 1.0 / mc->data[i][i]);
+                /* Eliminate all m[k, i] entries in the rows below */
                 for (k = i + 1; k < mc->rows; k++)
                         matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
         }
         return det;
+}
+
+Matrix *matrix_inv(Matrix *m) {
+        /* Ensure that the matrix is square */
+        if (m->rows != m->columns)
+                return NULL;
+        /* Perform elimination on a copy of m as well as on an identity matrix */
+        Matrix *mc = matrix_copy(m);
+        Matrix *inv = matrix_identity(m->rows);
+        for (unsigned int i = 0; i < mc->rows; i++) {
+                unsigned int k = i;
+                for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
+                if (k >= mc->rows)
+                        return NULL;
+                matrix_row_swap(inv, i, k);
+                matrix_row_swap(mc, i, k);
+                matrix_row_scale(inv, i, 1.0 / mc->data[i][i]);
+                matrix_row_scale(mc, i, 1.0 / mc->data[i][i]);
+                for (k = i + 1; k < mc->rows; k++) {
+                        matrix_row_add_scaled(inv, k, i, -mc->data[k][i]);
+                        matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
+                }
+        }
+        /* The original matrix is now upper triangular, with 1's on the diagonal.
+           Perform back-substitution to transform it into an identity matrix */
+        for (unsigned int i = m->rows - 1; i > 0; i--)
+                for (unsigned int k = 0; k < i; k++)
+                        matrix_row_add_scaled(inv, k, i, -mc->data[k][i]);
+        return inv;
 }
 
 void matrix_show(Matrix *m, char *format) {

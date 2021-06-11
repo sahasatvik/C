@@ -48,6 +48,8 @@ void matrix_map(Matrix *, double (*)(double, unsigned int, unsigned int));
 
 /* Get the determinant of a square matrix */
 double matrix_det(Matrix *);
+/* Get the inverse of a square matrix */
+Matrix *matrix_inv(Matrix *);
 
 /* Display the elements of a matrix */
 void matrix_show(Matrix *, char *);
