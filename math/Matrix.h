@@ -22,19 +22,25 @@ Matrix *matrix_copy(Matrix *);
 Matrix *matrix_submatrix(Matrix *, unsigned int, unsigned int, unsigned int, unsigned int);
 /* Get the transpose of a matrix */
 Matrix *matrix_transpose(Matrix *);
-/* Get a scaled copy of a matrix */
-Matrix *matrix_scale(Matrix *, double);
-/* Get the sum of two matrices */
-Matrix *matrix_sum(Matrix *, Matrix *);
 /* Get the product of two matrices */
 Matrix *matrix_mul(Matrix *, Matrix *);
 
-/* Swap two rows */
+/* Calculate the sum of two matrices, store in the first */
+void matrix_sum(Matrix *, Matrix *);
+
+/* Get the sum of all elements in a matrix */
+double matrix_sum_elem(Matrix *);
+
+/* Swap two rows in place */
 void matrix_row_swap(Matrix *, unsigned int, unsigned int);
-/* Scale a row */
+/* Scale a row in place */
 void matrix_row_scale(Matrix *, unsigned int, double);
-/* Add a scaled copy of another row */
+/* Add a scaled copy of another row in place */
 void matrix_row_add_scaled(Matrix *, unsigned int, unsigned int, double);
+/* Scale all elements of a matrix in place */
+void matrix_scale(Matrix *, double);
+/* Map all elements of a matrix in place */
+void matrix_map(Matrix *, double (*)(double, unsigned int, unsigned int));
 
 /* Display the elements of a matrix */
 void matrix_show(Matrix *, char *);

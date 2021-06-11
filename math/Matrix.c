@@ -35,26 +35,6 @@ Matrix *matrix_transpose(Matrix *m) {
         return mt;
 }
 
-Matrix *matrix_scale(Matrix *m, double c) {
-        Matrix *ms = matrix_zeros(m->rows, m->columns);
-        for (unsigned int i = 0; i < ms->rows; i++)
-                for (unsigned int j = 0; j < ms->columns; j++)
-                        ms->data[i][j] = c * m->data[i][j];
-        return ms;
-}
-
-Matrix *matrix_sum(Matrix *a, Matrix *b) {
-        if (a->rows != b->rows || a->columns != b->columns)
-                return NULL;
-        Matrix *c = matrix_zeros(a->rows, a->columns);
-        for (unsigned int i = 0; i < c->rows; i++) {
-                for (unsigned int j = 0; j < c->columns; j++) {
-                        c->data[i][j] = a->data[i][j] + b->data[i][j];
-                }
-        }
-        return c;
-}
-
 Matrix *matrix_mul(Matrix *a, Matrix *b) {
         if (a->columns != b->rows)
                 return NULL;
@@ -71,7 +51,7 @@ Matrix *matrix_mul(Matrix *a, Matrix *b) {
 }
 
 Matrix *matrix_copy(Matrix *m) {
-        Matrix *mc = matrix_zeros(m->columns, m->rows);
+        Matrix *mc = matrix_zeros(m->rows, m->columns);
         for (unsigned int i = 0; i < mc->rows; i++)
                 for (unsigned int j = 0; j < mc->columns; j++)
                         mc->data[i][j] = m->data[i][j];
@@ -90,6 +70,24 @@ Matrix *matrix_submatrix(Matrix *m, unsigned int i0, unsigned int j0, unsigned i
                 for (unsigned int j = j0; j < j1; j++)
                         mc->data[i - i0][j - j0] = m->data[i][j];
         return mc;
+}
+
+void matrix_sum(Matrix *a, Matrix *b) {
+        if (a->rows != b->rows || a->columns != b->columns)
+                return;
+        for (unsigned int i = 0; i < a->rows; i++) {
+                for (unsigned int j = 0; j < a->columns; j++) {
+                        a->data[i][j] += b->data[i][j];
+                }
+        }
+}
+
+double matrix_sum_elem(Matrix *m) {
+        double sum = 0.0;
+        for (unsigned int i = 0; i < m->rows; i++)
+                for (unsigned int j = 0; j < m->columns; j++)
+                        sum += m->data[i][j];
+        return sum;
 }
 
 void matrix_row_swap(Matrix *m, unsigned int x, unsigned int y) {
@@ -112,6 +110,18 @@ void matrix_row_add_scaled(Matrix *m, unsigned int x, unsigned int y, double c) 
                 return;
         for (unsigned int j = 0; j < m->columns; j++)
                 m->data[x][j] += c * m->data[y][j];
+}
+
+void matrix_scale(Matrix *m, double c) {
+        for (unsigned int i = 0; i < m->rows; i++)
+                for (unsigned int j = 0; j < m->columns; j++)
+                        m->data[i][j] *= c;
+}
+
+void matrix_map(Matrix *m, double (*f)(double, unsigned int, unsigned int)) {
+        for (unsigned int i = 0; i < m->rows; i++)
+                for (unsigned int j = 0; j < m->columns; j++)
+                        m->data[i][j] = f(m->data[i][j], i, j);
 }
 
 void matrix_show(Matrix *m, char *format) {

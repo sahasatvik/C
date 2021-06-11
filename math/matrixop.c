@@ -8,6 +8,9 @@ double f(unsigned int i, unsigned int j) {
 double g(unsigned int i, unsigned int j) {
         return i + j * j;
 }
+double square(double x, unsigned int i, unsigned int j) {
+        return x * x;
+}
 
 int main(int argc, const char *argv[]) {
         Matrix *a = matrix_formula(2, 3, f);
@@ -17,6 +20,9 @@ int main(int argc, const char *argv[]) {
         matrix_show(a, "%5.1f ");
         printf("\nMatrix B :\n");
         matrix_show(b, "%5.1f ");
+        
+        printf("\nSum of elements in A : %5.1f\n", matrix_sum_elem(a));
+        printf("Sum of elements in B : %5.1f\n", matrix_sum_elem(b));
         
         Matrix *a_transpose = matrix_transpose(a);
         printf("\nMatrix A transpose:\n");
@@ -43,6 +49,10 @@ int main(int argc, const char *argv[]) {
 
         matrix_row_add_scaled(a, 0, 1, -4);
         printf("\nMatrix A after subtracting four times row 1 from row 0 in place:\n");
+        matrix_show(a, "%5.1f ");
+        
+        matrix_map(a, square);
+        printf("\nMatrix A after squaring all elements in place:\n");
         matrix_show(a, "%5.1f ");
 
         matrix_free(a);
