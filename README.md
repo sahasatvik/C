@@ -4,6 +4,8 @@ A collection of utilities written in C
 - `math` contains small mathematical utilities.
     - `dectobin` is a decimal to binary converter.
     - `pcal` is a Reverse Polish Notation calculator.
+    - `matrixop` and `matrixdet` showcase some basic operations with 2D matrices.
+    - `Matrix` is a tiny library which helps perform operations on 2D matrices.
 - `prime` contains programs pertaining to prime numbers.
     - `primecalc` counts and produces prime numbers using the Sieve of Eratosthenes.
     - `BitArray` is a tiny library which simulates an array of individually controllable bits, with no wasted space.
