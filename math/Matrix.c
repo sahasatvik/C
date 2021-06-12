@@ -168,22 +168,24 @@ double matrix_det(Matrix *m) {
         Matrix *mc = matrix_copy(m);
         double det = 1.0;
         for (int i = 0; i < mc->rows; i++) {
-                int k = i;
-                /* Skip ahead until the m[k, i] entry is non-zero */
-                for (; k < mc->rows && fabs(mc->data[k][i]) < MATRIX_EPSILON; k++);
-                /* All m[k, i] are zero, which means that the matrix is singular */
-                if (k >= mc->rows) {
+                /* Choose a row to pivot about, such that |m[i, i]| is maximized */
+                int pivot = i;
+                for (int k = i; k < mc->rows; k++)
+                        if (fabs(mc->data[k][i]) > fabs(mc->data[pivot][i]))
+                                pivot = k;
+                /* If the pivot entry is zero, the matrix is singular */
+                if (fabs(mc->data[pivot][i]) < MATRIX_EPSILON) {
                         matrix_free(mc);
                         return 0.0;
                 }
                 /* Swap the non-zero row into place */
-                matrix_row_swap(mc, i, k);
+                matrix_row_swap(mc, i, pivot);
                 /* Scale the determinant up, and scale the leading element m[i, i] in the row down to one.
                    If there was a swap, the determinant also changes sign */
-                det *= mc->data[i][i] * ((i == k)? 1.0 : -1.0);
+                det *= mc->data[i][i] * ((i == pivot)? 1.0 : -1.0);
                 matrix_row_scale(mc, i, 1.0 / mc->data[i][i]);
                 /* Eliminate all m[k, i] entries in the rows below */
-                for (k = i + 1; k < mc->rows; k++)
+                for (int k = i + 1; k < mc->rows; k++)
                         matrix_row_add_scaled(mc, k, i, -mc->data[k][i]);
         }
         matrix_free(mc);
@@ -198,15 +200,17 @@ int matrix_elim_aug(Matrix *m, Matrix *aug) {
                 return 0;
         /* Perform elimination on m, and perform the same operations on aug */
         for (int i = 0; i < m->rows; i++) {
-                int k = i;
-                for (; k < m->rows && fabs(m->data[k][i]) < MATRIX_EPSILON; k++);
-                if (k >= m->rows)
+                int pivot = i;
+                for (int k = i; k < m->rows; k++)
+                        if (fabs(m->data[k][i]) > fabs(m->data[pivot][i]))
+                                pivot = k;
+                if (fabs(m->data[pivot][i]) < MATRIX_EPSILON)
                         return 0;
-                matrix_row_swap(aug, i, k);
-                matrix_row_swap(m, i, k);
+                matrix_row_swap(aug, i, pivot);
+                matrix_row_swap(m, i, pivot);
                 matrix_row_scale(aug, i, 1.0 / m->data[i][i]);
                 matrix_row_scale(m, i, 1.0 / m->data[i][i]);
-                for (k = i + 1; k < m->rows; k++) {
+                for (int k = i + 1; k < m->rows; k++) {
                         matrix_row_add_scaled(aug, k, i, -m->data[k][i]);
                         matrix_row_add_scaled(m, k, i, -m->data[k][i]);
                 }
