@@ -26,7 +26,7 @@ int main(int argc, const char *argv[]) {
                 int cycle = graph_cycle_elem(g, start, -1, visited);
                 printf("\nCycle with %2d : %d, ", start, cycle);
                 printf("Visited nodes : ");
-                for (unsigned int i = 0; i < n_nodes; i++)
+                for (int i = 0; i < n_nodes; i++)
                         if (visited[i])
                                 printf("%2d ", i);
                 free(visited);

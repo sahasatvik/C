@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include "Matrix.h"
 
-double f(unsigned int i, unsigned int j) {
+double f(int i, int j) {
         return i * i + j;
 }
-double g(unsigned int i, unsigned int j) {
+double g(int i, int j) {
         return i + j * j;
 }
-double square(double x, unsigned int i, unsigned int j) {
+double square(double x, int i, int j) {
         return x * x;
 }
 
