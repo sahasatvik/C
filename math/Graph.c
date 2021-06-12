@@ -1,13 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "Graph.h"
 
 Graph *graph_create(unsigned int n_nodes, unsigned int n_edges, int edges[][2]) {
         Graph *g = malloc(sizeof(Graph));
         g->n_nodes = n_nodes;
-        g->adjacency = calloc(n_nodes, sizeof(unsigned char *));
+        g->adjacency = calloc(n_nodes, sizeof(bool *));
         for (unsigned int i = 0; i < n_nodes; i++)
-                g->adjacency[i] = calloc(n_nodes, sizeof(unsigned char));
+                g->adjacency[i] = calloc(n_nodes, sizeof(bool));
         /* For every pair of nodes constituting an edge, mark them adjacent to one another */
         for (unsigned int i = 0; i < n_edges; i++) {
                 g->adjacency[edges[i][0]][edges[i][1]] = 1;
@@ -35,7 +36,7 @@ Graph *graph_copy(Graph *g) {
         return gc;
 }
 
-int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, unsigned char *visited) {
+int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, bool *visited) {
         /* Mark the current element as visited */
         visited[current] = 1;
         for (unsigned int i = 0; i < g->n_nodes; i++) {
@@ -58,7 +59,7 @@ int graph_cycle_elem(Graph *g, unsigned int current, unsigned int previous, unsi
 }
 
 int graph_cycle(Graph *g) {
-        unsigned char *visited = calloc(g->n_nodes, sizeof(unsigned char));
+        bool *visited = calloc(g->n_nodes, sizeof(bool));
         for (unsigned int i = 0; i < g->n_nodes; i++)
                 /* Ignore already visited nodes */
                 if (!visited[i] && graph_cycle_elem(g, i, -1, visited)) {

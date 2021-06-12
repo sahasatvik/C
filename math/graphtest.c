@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "Graph.h"
 
 int main(int argc, const char *argv[]) {
@@ -21,7 +22,7 @@ int main(int argc, const char *argv[]) {
         graph_show_adj(g, "%2d -> ", "%2d ");
 
         for (int start = 0; start < n_nodes; start++) {
-                unsigned char *visited = calloc(n_nodes, sizeof(unsigned char));
+                bool *visited = calloc(n_nodes, sizeof(bool));
                 int cycle = graph_cycle_elem(g, start, -1, visited);
                 printf("\nCycle with %2d : %d, ", start, cycle);
                 printf("Visited nodes : ");

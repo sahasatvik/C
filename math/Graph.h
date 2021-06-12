@@ -1,9 +1,11 @@
 #ifndef _GRAPH_H
 #define _GRAPH_H
 
+#include <stdbool.h>
+
 typedef struct {
         unsigned int n_nodes;
-        unsigned char **adjacency;
+        bool **adjacency;
 } Graph;
 
 /* Create an undirected graph with nodes numbered 0 ... n - 1 */
@@ -16,7 +18,7 @@ void graph_free(Graph *);
 Graph *graph_copy(Graph *);
 
 /* Returns whether a given element is part of or connected to a cycle */
-int graph_cycle_elem(Graph *g, unsigned int, unsigned int, unsigned char *);
+int graph_cycle_elem(Graph *g, unsigned int, unsigned int, bool *);
 /* Returns whether the given graph contains a cycle of elements */
 int graph_cycle(Graph *g);
 
