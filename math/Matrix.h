@@ -56,6 +56,6 @@ int matrix_elim_aug(Matrix *, Matrix *);
 Matrix *matrix_inv(Matrix *);
 
 /* Display the elements of a matrix */
-void matrix_show(Matrix *, char *);
+void matrix_show(Matrix *, const char *);
 
 #endif

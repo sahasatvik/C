@@ -23,6 +23,6 @@ bool graph_cycle_elem(Graph *g, int, int, bool *);
 bool graph_cycle(Graph *g);
 
 /* Display the graph nodes and their adjacencies */
-void graph_show_adj(Graph *, char *, char *);
+void graph_show_adj(Graph *, const char *, const char *);
 
 #endif

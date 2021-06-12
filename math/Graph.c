@@ -70,7 +70,7 @@ bool graph_cycle(Graph *g) {
         return false;
 }
 
-void graph_show_adj(Graph *g, char *format_node, char *format_others) {
+void graph_show_adj(Graph *g, const char *format_node, const char *format_others) {
         if (g == NULL) {
                 printf("NULL\n");
                 return;

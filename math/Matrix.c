@@ -240,7 +240,7 @@ Matrix *matrix_inv(Matrix *m) {
         return idt;
 }
 
-void matrix_show(Matrix *m, char *format) {
+void matrix_show(Matrix *m, const char *format) {
         if (m == NULL) {
                 printf("NULL\n");
                 return;
