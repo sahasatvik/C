@@ -19,6 +19,11 @@ A collection of utilities written in C
 - `ode` contains programs which numerically solve ordinary differential equations.
     - `euler` solves an ODE using Euler's method.
     - `rungekutta` solves an ODE using a fourth order Runge-Kutta method.
+- `io` contains programs which deal with basis input/output operations.
+    - `count` is a line/word/character counter, which largely behaves the same as the `wc` program.
+    - `search` displays those lines supplied in standard input which contain the string given as a command line argument.
+    - `monthnames` displays the names of the months corresponding to the numbers given as command line arguments.
+    - `args` demonstrates a very basic usage of the `getopt()` method of parsing command line arguments.
 - `nqueens` contains a solver for the n-queens problem.
 - `sort` contains programs implementing various sorting algorithms.
     - `qsort` is an implementation of quicksort.
