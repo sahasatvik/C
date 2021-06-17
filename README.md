@@ -8,6 +8,7 @@ A collection of utilities written in C
     - `Matrix` is a tiny library which helps perform operations on 2D matrices.
     - `graphtest` showcases some basic operations with graphs.
     - `Graph` is a tiny library which helps perform basic operations on undirected graphs.
+    - `ramanujan` gives all the ways a number can be expressed as the sum of two cubes.
 - `prime` contains programs pertaining to prime numbers.
     - `primecalc` counts and produces prime numbers using the Sieve of Eratosthenes.
     - `BitArray` is a tiny library which simulates an array of individually controllable bits, with no wasted space.
