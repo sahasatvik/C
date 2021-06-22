@@ -26,7 +26,7 @@ A collection of utilities written in C
     - `monthnames` displays the names of the months corresponding to the numbers given as command line arguments.
     - `args` demonstrates a very basic usage of the `getopt()` method of parsing command line arguments.
 - `ttt` contains a tic-tac-toe game with the minimax algorithm.
-    - `ttt` starts a game of tic-tac-toe, with the human player moving first and the computer playing with minimax.
+    - `ttt` starts a game of tic-tac-toe, run `ttt -h` for options.
     - `Board` gives an interface for manipulating a 3x3 tic-tac-toe board and implements the minimax algorithm.
 - `nqueens` contains a solver for the n-queens problem.
 - `sort` contains programs implementing various sorting algorithms.
