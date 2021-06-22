@@ -97,7 +97,7 @@ void take_turn(Board *board, BoardItem computer, int showeval) {
 }
 
 void usage() {
-        printf("usage: ttt [-hcne]\n");
+        printf("usage: ttt [-he] [-c | -n]\n");
         printf("    -h  Show this help message\n");
         printf("    -c  Take the first turn (crosses) [default]\n");
         printf("    -n  Take the second turn (noughts)\n");
