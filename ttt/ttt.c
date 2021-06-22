@@ -1,9 +1,47 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "Board.h"
 
-void take_turn(Board *);
+void take_turn(Board *, BoardItem, int);
+void usage();
 
-int main(int argc, const char *argv[]) {
+int main(int argc, char * const argv[]) {
+        BoardItem computer = NOUGHT;
+
+        /* Read the command line options */
+        int c, cflag = 0, nflag = 0, eflag = 0;
+        while ((c = getopt(argc, argv, "hcne")) != -1) {
+                switch (c) {
+                        case 'h':
+                                printf("Tic-tac toe vs the computer.\n");
+                                usage();
+                                exit(0);
+                                break;
+                        case 'c':
+                                cflag++;
+                                break;
+                        case 'n':
+                                nflag++;
+                                break;
+                        case 'e':
+                                eflag++;
+                                break;
+                        case '?':
+                                usage();
+                                exit(1);
+                                break;
+                }
+        }
+        if (cflag && nflag) {
+                printf("%s: can only use one of -c, -n\n", argv[0]);
+                exit(1);
+        }
+        if (cflag)
+                computer = NOUGHT;
+        if (nflag)
+                computer = CROSS;
+
         Board *board = board_init();
         
         board_show(board);
@@ -11,7 +49,7 @@ int main(int argc, const char *argv[]) {
 
         /* Play at most 9 moves */
         for (int i = 0; i < 9; i++) {
-                take_turn(board);
+                take_turn(board, computer, eflag);
                 printf("\n");
                 board_show(board);
                 printf("\n");
@@ -33,12 +71,16 @@ int main(int argc, const char *argv[]) {
         return 0;
 }
 
-void take_turn(Board *board) {
-        /* The computer play noughts */
-        if (board->turn == NOUGHT) {
-                int eval = minimax(board, NOUGHT, 0);
-                board_set(board, board->bestmove, NOUGHT);
-                printf("Computer played %d (evaluation %d).\n", board->bestmove, eval);
+void take_turn(Board *board, BoardItem computer, int showeval) {
+        if (board->turn == computer) {
+                /* The computer plays using the minimax algorithm */
+                int eval = minimax(board, board->turn, 0);
+                board_set(board, board->bestmove, board->turn);
+                printf("Computer played %d", board->bestmove);
+                if (showeval)
+                        printf(" (evaluation %d)\n", eval);
+                else
+                        printf("\n");
         } else {
                 int pos, c;
                 /* Prompt the player for the move */
@@ -52,4 +94,12 @@ void take_turn(Board *board) {
                 board_set(board, pos, board->turn);
         }
         board->turn *= -1;
+}
+
+void usage() {
+        printf("usage: ttt [-hcne]\n");
+        printf("    -h  Show this help message\n");
+        printf("    -c  Take the first turn (crosses) [default]\n");
+        printf("    -n  Take the second turn (noughts)\n");
+        printf("    -e  Show the computer evaluation\n");
 }
